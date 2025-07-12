@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const API = 'https://celebal-project-backend.onrender.com/api'; // Update if your server runs on a different port
+const API = 'http://localhost:5000/api'; // Update if your server runs on a different port
 
 const LoginRegister = () => {
   const [isLogin, setIsLogin] = useState(true);

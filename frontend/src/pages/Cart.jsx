@@ -9,7 +9,7 @@ const Cart = () => {
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get('https://celebal-project-backend.onrender.com/api/cart', {
+      const res = await axios.get('http://localhost:5000/api/cart', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCart(res.data.items);
@@ -20,7 +20,7 @@ const Cart = () => {
 
   const removeFromCart = async (productId) => {
     try {
-      await axios.delete(`https://celebal-project-backend.onrender.com/api/cart/${productId}`, {
+      await axios.delete(`http://localhost:5000/api/cart/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchCart();
