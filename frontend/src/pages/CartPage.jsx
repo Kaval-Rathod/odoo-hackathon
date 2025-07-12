@@ -53,7 +53,7 @@ const CartPage = () => {
                     <h1 className={styles.pageTitle}>My Cart</h1>
             <div className={styles.cartLayout}>
                 <div className={styles.wishlistGrid}>
-                    {cart.map((item) => (
+                    {cart.filter(item => item.product).map((item) => (
                         <div key={item._id} className={styles.productCard}>
                             <button
                                 onClick={() => removeFromCart(item._id)}

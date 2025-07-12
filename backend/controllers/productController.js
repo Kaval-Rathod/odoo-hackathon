@@ -10,8 +10,7 @@ exports.createProduct = async (req, res) => {
       status: 'pending',
     };
     const product = await Product.create(productData);
-    // Award 5 points to the user for adding a product
-    await User.findByIdAndUpdate(req.user._id, { $inc: { points: 5 } });
+    // Removed awarding points here
     const populatedProduct = await Product.findById(product._id)
       .populate('category', 'name')
       .populate('uploader', 'name email');
@@ -25,12 +24,15 @@ exports.createProduct = async (req, res) => {
 // Approve product (Admin only)
 exports.approveProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      { status: 'approved' },
-      { new: true }
-    );
+    const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ message: 'Product not found' });
+    if (product.status === 'approved') {
+      return res.status(400).json({ message: 'Product already approved' });
+    }
+    product.status = 'approved';
+    await product.save();
+    // Award 5 points to the uploader when product is approved
+    await User.findByIdAndUpdate(product.uploader, { $inc: { points: 5 } });
     res.status(200).json(product);
   } catch (err) {
     res.status(400).json({ message: err.message });
