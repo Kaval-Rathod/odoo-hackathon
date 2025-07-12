@@ -1,17 +1,53 @@
-🛒 E-commerce Platform:
+# 👕 ReWear – Community Clothing Exchange
 
-A full-stack e-commerce web application featuring:
+**ReWear** is a web-based platform that empowers communities to reduce textile waste and promote sustainable fashion. It allows users to exchange unused clothing through direct swaps or a point-based redemption system.
 
-🔐 User authentication
+---
 
-🛠 Admin product management
+## 🧩 Problem Statement
 
-🛒 Shopping cart and wishlist
+Every year, millions of tons of wearable clothes are discarded, contributing to pollution and unnecessary waste. Many of these garments are still in good condition and could benefit others if exchanged properly. However, there is a lack of accessible, community-driven platforms that make clothing exchange simple, rewarding, and trustworthy.
 
-📦 Order processing system
+**ReWear** addresses this by creating a platform where people can list, browse, and swap clothes either through direct exchange or using a point-based system. It fosters a circular fashion economy while encouraging environmentally conscious behavior.
 
-Built with a React frontend and Node.js/Express backend.
+---
 
+## 🌟 Key Features
+
+### 👤 User Authentication
+- Sign up and login via email and password
+
+### 🏠 Landing Page
+- Introduction to the platform
+- Calls-to-action: “Start Swapping”, “Browse Items”, “List an Item”
+- Featured items carousel
+
+### 📋 User Dashboard
+- View profile details and points balance
+- See uploaded items
+- Track ongoing and completed swaps
+
+### 👕 Item Detail Page
+- Image gallery and full item description
+- Uploader info
+- Options to request a swap or redeem via points
+- Shows item availability status
+
+### ➕ Add New Item
+- Upload images and provide item info: title, description, category, type, size, condition, and tags
+
+### 🛠️ Admin Panel
+- Approve or reject item listings
+- Remove spam or inappropriate content
+- Lightweight admin dashboard for moderation
+
+---
+
+## 🌱 Vision
+
+ReWear aims to create a positive environmental impact by making clothing reuse accessible and engaging. It builds a like-minded community that values sustainability, affordability, and mindful fashion choices.
+
+---
 
 🚀 Live Demo:
 👉 https://celebal-project-frontend.vercel.app
@@ -71,4 +107,4 @@ celebal_project/
 
 │
 
-└── ecommerce-frontend/    # React frontend powered by Vite
+└── frontend/    # React frontend powered by Vite

@@ -31,9 +31,9 @@ const AddProduct = () => {
   const [options, setOptions] = useState([{ name: '', values: '' }]);
 
   useEffect(() => {
-    if (!user?.isAdmin) {
-        navigate('/login');
-        return;
+    if (!user) {
+      navigate('/login');
+      return;
     }
     fetchCategories();
   }, [user, navigate]);
@@ -188,8 +188,13 @@ const AddProduct = () => {
       };
 
       await productsAPI.create(productData);
-      toast.success('Product added successfully!');
-      navigate('/admin/products');
+      if (user.isAdmin) {
+        toast.success('Product added successfully!');
+        navigate('/admin/products');
+      } else {
+        toast.success('Product submitted for approval! It will be visible after admin approval.');
+        navigate('/dashboard');
+      }
     } catch (error) {
       console.error('Failed to add product:', error);
       toast.error('Failed to add product');
@@ -198,15 +203,8 @@ const AddProduct = () => {
     }
   };
 
-  if (!user?.isAdmin) {
-    return (
-      <div className={styles.addProductContainer}>
-        <div className={styles.accessDeniedBox}>
-          <h1 className={styles.accessDeniedTitle}>Access Denied</h1>
-          <p className={styles.accessDeniedText}>You don't have permission to add products.</p>
-        </div>
-      </div>
-    );
+  if (!user) {
+    return null; // or a spinner
   }
 
   return (
@@ -214,9 +212,9 @@ const AddProduct = () => {
       <div className={styles.formContainer}>
         <div className={styles.formHeader}>
           <h1 className={styles.formTitle}>Add New Product</h1>
-          <Link to="/admin/products" className={styles.backLink}>
+          <Link to={user.isAdmin ? "/admin/products" : "/dashboard"} className={styles.backLink}>
             <ArrowLeft size={18} />
-            Back to Products
+            Back
           </Link>
         </div>
 

@@ -8,6 +8,7 @@ import { DEFAULT_PRODUCT_IMAGE } from '../utils/constants';
 import toast from 'react-hot-toast';
 import styles from '../styles/ProductDetail.module.css';
 import React from 'react';
+import { swapAPI } from '../api/index';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -21,6 +22,8 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedOptions, setSelectedOptions] = useState({});
+  const [swapStatus, setSwapStatus] = useState(null);
+  const [swapLoading, setSwapLoading] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -37,6 +40,19 @@ const ProductDetail = () => {
     };
     fetchProduct();
   }, [id]);
+
+  useEffect(() => {
+    // Fetch swap status for this user and item
+    const fetchSwapStatus = async () => {
+      if (!user || !product) return;
+      try {
+        const swaps = await swapAPI.getMy();
+        const req = swaps.find(r => r.item?._id === product._id);
+        setSwapStatus(req || null);
+      } catch {}
+    };
+    fetchSwapStatus();
+  }, [user, product]);
 
   const handleQuantityChange = (amount) => {
     setQuantity((prev) => {
@@ -88,6 +104,19 @@ const ProductDetail = () => {
       extra = ' (' + product.options.map(opt => `${opt.name}: ${selectedOptions[opt.name] || ''}`).join(', ') + ')';
     }
     toast.success(`${quantity} x ${product.name}${extra} added to cart!`);
+  };
+
+  const handleSwapRequest = async (type) => {
+    setSwapLoading(true);
+    try {
+      await swapAPI.create({ itemId: product._id, type });
+      toast.success(type === 'swap' ? 'Swap request sent!' : 'Redemption request sent!');
+      setSwapStatus({ status: 'pending', type });
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Request failed');
+    } finally {
+      setSwapLoading(false);
+    }
   };
 
   if (loading) {
@@ -220,6 +249,28 @@ const ProductDetail = () => {
             <div className={styles.stockInfo}>
                 {product.countInStock > 0 ? `${product.countInStock} items in stock` : 'Currently out of stock'}
             </div>
+            <div style={{ marginBottom: 8 }}>
+              <strong>Uploader:</strong> {product.uploader?.name || 'N/A'} ({product.uploader?.email || ''})
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              <strong>Status:</strong> {product.status}
+            </div>
+            {/* Swap/Redemption Actions */}
+            {user && !user.isAdmin && product.uploader?._id !== user.id && product.status === 'approved' && !swapStatus && (
+              <div style={{ margin: '16px 0' }}>
+                <button className="btn btn-primary" onClick={() => handleSwapRequest('swap')} disabled={swapLoading}>
+                  Request Swap
+                </button>
+                <button className="btn btn-secondary" onClick={() => handleSwapRequest('points')} disabled={swapLoading} style={{ marginLeft: 12 }}>
+                  Redeem via Points
+                </button>
+              </div>
+            )}
+            {swapStatus && (
+              <div style={{ margin: '16px 0' }}>
+                <strong>Request Status:</strong> {swapStatus.status} ({swapStatus.type})
+              </div>
+            )}
           </div>
         </div>
       </div>

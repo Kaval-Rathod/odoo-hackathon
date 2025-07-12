@@ -13,6 +13,7 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const wishlistRoutes = require('./routes/wishlistRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const swapRequestRoutes = require('./routes/swapRequestRoutes');
 
 dotenv.config();
 const app = express();
@@ -41,6 +42,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/swaps', swapRequestRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {

@@ -26,6 +26,7 @@ import AdminLayout from './components/AdminLayout';
 import CategoriesPage from './pages/CategoriesPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import UserDashboard from './pages/UserDashboard';
 
 function App() {
   return (
@@ -46,6 +47,8 @@ function App() {
                   <Route path="/products/:id" element={<ProductDetail />} />
                   <Route path="/wishlist" element={<WishlistPage />} />
                   <Route path="/categories" element={<CategoriesPage />} />
+                  <Route path="/dashboard" element={<UserDashboard />} />
+                  <Route path="/add-product" element={<AddProduct />} />
                   {/* <Route path="/cart" element={<Cart />} /> */}
                   <Route path="/cart" element={<CartPage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />

@@ -27,7 +27,7 @@ const ProductList = () => {
     const [allCategories, setAllCategories] = useState([]);
 
     const { addToCart } = useCart();
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user } = useAuth();
     const { toggleWishlist, isProductInWishlist } = useWishlist();
 
     useEffect(() => {
@@ -113,6 +113,12 @@ const ProductList = () => {
     
     return (
         <div className={styles.productListContainer}>
+            {/* Add Product button for logged-in users */}
+            {isAuthenticated && !user?.isAdmin && (
+              <div style={{ margin: '16px 0', textAlign: 'right' }}>
+                <Link to="/add-product" className="btn btn-primary">Add Product</Link>
+              </div>
+            )}
             <div className={styles.headerSection}>
                 <h1 className={styles.productListTitle}>{query.get('search') ? `Results for "${query.get('search')}"` : 'Our Products'}</h1>
                 <div className={styles.searchFilterRow}>

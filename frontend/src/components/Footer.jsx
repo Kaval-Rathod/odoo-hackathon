@@ -6,7 +6,7 @@ const Footer = () => (
   <footer className={styles.footer}>
     <div className={styles.footerContainer}>
       <div className={styles.footerBrand}>
-        <Link to="/" className={styles.logo}>getcart</Link>
+        <Link to="/" className={styles.logo}>ReWear</Link>
         <p className={styles.tagline}>Curated products for a modern lifestyle.</p>
         <div className={styles.socials}>
           {/* Social icons placeholder */}
@@ -48,7 +48,7 @@ const Footer = () => (
       </div>
     </div>
     <div className={styles.copyright}>
-      &copy; {new Date().getFullYear()} getcart. All rights reserved.
+      &copy; {new Date().getFullYear()} ReWear. All rights reserved.
     </div>
   </footer>
 );

@@ -105,7 +105,7 @@ const ContactPage = () => {
                         <h3>Our Information</h3>
                         <p>You can also reach us at the following addresses:</p>
                         <ul>
-                            <li><Mail size={18} /> <span>amba.parmar0705@gmail.com</span></li>
+                            <li><Mail size={18} /> <span>rewear.hello@outlook.com</span></li>
                             <li><Phone size={18} /> <span>+1 (234) 567-890</span></li>
                             <li><MapPin size={18} /> <span>123 Shopping Lane, Commerce City, 54321</span></li>
                         </ul>

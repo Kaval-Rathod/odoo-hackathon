@@ -5,7 +5,7 @@ const AboutPage = () => {
         <div className={styles.aboutPage}>
             <div className="container">
                 <header className={styles.pageHeader}>
-                    <h1 className={styles.pageTitle}>About getcart</h1>
+                    <h1 className={styles.pageTitle}>About ReWear</h1>
                     <p className={styles.pageSubtitle}>Your one-stop shop for everything you need.</p>
                 </header>
 
@@ -13,7 +13,7 @@ const AboutPage = () => {
                     <div className={styles.textBlock}>
                         <h2>Our Story</h2>
                         <p>
-                            Founded in 2024, getcart was born out of a desire to create a seamless and enjoyable online shopping experience. We noticed that finding high-quality, curated products in one place was a challenge. We wanted to build a platform where customers could discover their next favorite things, from the latest electronics to timeless fashion pieces and everyday essentials.
+                            Founded in 2024, ReWear was born out of a desire to create a seamless and enjoyable online shopping experience. We noticed that finding high-quality, curated products in one place was a challenge. We wanted to build a platform where customers could discover their next favorite things, from the latest electronics to timeless fashion pieces and everyday essentials.
                         </p>
                         <p>
                             Our team is passionate about design, technology, and customer service. We work tirelessly to source the best products, build intuitive features, and provide support that makes you feel valued.

@@ -91,7 +91,7 @@ const Navbar = () => {
       <header className={styles.header}>
         <div className={styles.container}>
           <Link to="/" className={styles.logo}>
-            getcart
+            ReWear
           </Link>
           
           <nav className={styles.navLinks}>
@@ -117,7 +117,12 @@ const Navbar = () => {
                 <span className={styles.cartBadge}>{getCartCount()}</span>
               )}
             </Link>
-            
+            {/* Add Product button for any logged-in user */}
+            {isAuthenticated && (
+              <Link to="/add-product" className="btn btn-primary" style={{ marginLeft: 12 }}>
+                Add Product
+              </Link>
+            )}
             <div className={styles.separator}></div>
 
             {isAuthenticated ? (

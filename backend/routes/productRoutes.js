@@ -13,9 +13,12 @@ const { protect, isAdmin } = require('../middleware/authMiddleware');
 router.get('/', getAllProducts);
 router.get('/:id', getProductById);
 
-// Admin Routes
-router.post('/', protect, isAdmin, createProduct);
-router.put('/:id', protect, isAdmin, updateProduct);
-router.delete('/:id', protect, isAdmin, deleteProduct);
+// Product creation: any authenticated user
+router.post('/', protect, createProduct);
+// Product update/delete: user can update/delete their own, admin can update/delete any
+router.put('/:id', protect, updateProduct);
+router.delete('/:id', protect, deleteProduct);
+router.put('/:id/approve', protect, isAdmin, require('../controllers/productController').approveProduct);
+router.put('/:id/reject', protect, isAdmin, require('../controllers/productController').rejectProduct);
 
 module.exports = router;

@@ -8,6 +8,7 @@ import { productsAPI } from '../api/products';
 import { ordersAPI } from '../api/orders';
 import { authAPI } from '../api/auth';
 import { contactAPI } from '../api/contact';
+import { swapAPI } from '../api/index';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import { DEFAULT_PRODUCT_IMAGE } from '../utils/constants';
@@ -562,6 +563,8 @@ const AdminDashboard = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const [pendingProducts, setPendingProducts] = useState([]);
+    const [swapRequests, setSwapRequests] = useState([]);
 
     useEffect(() => {
         if (!user?.isAdmin) {
@@ -569,6 +572,8 @@ const AdminDashboard = () => {
             return;
         }
         fetchData();
+        fetchPendingProducts();
+        fetchSwapRequests();
     }, [user, navigate]);
 
     const fetchData = async () => {
@@ -610,6 +615,39 @@ const AdminDashboard = () => {
         }
     };
 
+    const fetchPendingProducts = async () => {
+        try {
+            const all = await productsAPI.getAll();
+            setPendingProducts(all.filter(p => p.status === 'pending'));
+        } catch {
+            setPendingProducts([]);
+        }
+    };
+    const fetchSwapRequests = async () => {
+        try {
+            const reqs = await swapAPI.getForMyItems();
+            setSwapRequests(reqs.filter(r => r.status === 'pending'));
+        } catch {
+            setSwapRequests([]);
+        }
+    };
+    const handleApprove = async (id) => {
+        await productsAPI.approve(id);
+        fetchPendingProducts();
+    };
+    const handleReject = async (id) => {
+        await productsAPI.reject(id);
+        fetchPendingProducts();
+    };
+    const handleAcceptSwap = async (id) => {
+        await swapAPI.accept(id);
+        fetchSwapRequests();
+    };
+    const handleRejectSwap = async (id) => {
+        await swapAPI.reject(id);
+        fetchSwapRequests();
+    };
+
     const handleDeleteProduct = async (productId) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
@@ -648,6 +686,68 @@ const AdminDashboard = () => {
                 <ContactMessagesContent contacts={contacts} />
             ) : (
                 <DashboardContent stats={stats} products={products} orders={orders} handleDeleteProduct={handleDeleteProduct} />
+            )}
+            {/* Admin: Pending Product Approvals */}
+            {user?.isAdmin && (
+                <section style={{ margin: '32px 0' }}>
+                    <h2>Pending Product Approvals</h2>
+                    {pendingProducts.length === 0 ? <p>No pending products.</p> : (
+                        <table className={styles.productTable} style={{ marginTop: 12 }}>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Uploader</th>
+                                    <th>Category</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {pendingProducts.map(p => (
+                                    <tr key={p._id}>
+                                        <td>{p.name}</td>
+                                        <td>{p.uploader?.name || 'N/A'}</td>
+                                        <td>{p.category?.name || 'N/A'}</td>
+                                        <td>
+                                            <button onClick={() => handleApprove(p._id)} className="btn btn-primary">Approve</button>
+                                            <button onClick={() => handleReject(p._id)} className="btn btn-danger" style={{ marginLeft: 8 }}>Reject</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </section>
+            )}
+            {/* Admin: Swap/Redemption Moderation */}
+            {user?.isAdmin && (
+                <section style={{ margin: '32px 0' }}>
+                    <h2>Pending Swap/Redemption Requests</h2>
+                    {swapRequests.length === 0 ? <p>No pending requests.</p> : (
+                        <table className={styles.orderTable} style={{ marginTop: 12 }}>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Requester</th>
+                                    <th>Type</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {swapRequests.map(r => (
+                                    <tr key={r._id}>
+                                        <td>{r.item?.name || 'Item'}</td>
+                                        <td>{r.requester?.name || 'User'}</td>
+                                        <td>{r.type}</td>
+                                        <td>
+                                            <button onClick={() => handleAcceptSwap(r._id)} className="btn btn-primary">Accept</button>
+                                            <button onClick={() => handleRejectSwap(r._id)} className="btn btn-danger" style={{ marginLeft: 8 }}>Reject</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </section>
             )}
         </>
     );

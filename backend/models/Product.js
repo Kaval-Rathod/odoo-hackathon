@@ -37,6 +37,16 @@ const productSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected', 'swapped', 'redeemed'],
+    default: 'pending'
+  },
+  uploader: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   sizes: [{ type: String }],
   models: [{ type: String }],
   options: [

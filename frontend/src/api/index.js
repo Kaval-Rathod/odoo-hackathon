@@ -42,4 +42,32 @@ api.interceptors.response.use(
   }
 );
 
+export const swapAPI = {
+  // Create a swap/point request
+  create: async ({ itemId, type }) => {
+    const response = await api.post('/swaps', { itemId, type });
+    return response.data;
+  },
+  // Accept a request
+  accept: async (id) => {
+    const response = await api.put(`/swaps/${id}/accept`);
+    return response.data;
+  },
+  // Reject a request
+  reject: async (id) => {
+    const response = await api.put(`/swaps/${id}/reject`);
+    return response.data;
+  },
+  // Get my requests
+  getMy: async () => {
+    const response = await api.get('/swaps/my');
+    return response.data;
+  },
+  // Get requests for my items
+  getForMyItems: async () => {
+    const response = await api.get('/swaps/for-my-items');
+    return response.data;
+  },
+};
+
 export default api; 
