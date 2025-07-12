@@ -1,0 +1,212 @@
+.orderHistoryPage {
+    background-color: #f9fafb;
+    padding: 2rem 0 4rem;
+    min-height: calc(100vh - var(--navbar-height));
+}
+
+.headerSection {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.headerIcon {
+    background-color: var(--white-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pageTitle {
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+.pageSubtitle {
+    color: var(--text-color-light);
+}
+
+.ordersList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.orderCard {
+    background-color: var(--white-color);
+    border-radius: var(--card-border-radius);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.orderId {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.orderMeta {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    color: var(--text-color-light);
+    font-size: 0.9rem;
+}
+
+.orderMeta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.statusBadge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.pending { background-color: #fef9c3; color: #ca8a04; }
+.processing { background-color: #dbeafe; color: #2563eb; }
+.shipped { background-color: #e0e7ff; color: #4f46e5; }
+.delivered { background-color: #dcfce7; color: #16a34a; }
+.cancelled { background-color: #fee2e2; color: #dc2626; }
+.defaultStatus { background-color: #f3f4f6; color: #4b5563; }
+
+
+.cardBody {
+    padding: 1.5rem;
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.addressBox {
+    background-color: #f9fafb;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    color: var(--text-color-light);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.cardFooter {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e9ecef;
+    background-color: #f8f9fa;
+    border-radius: 0 0 8px 8px;
+}
+
+.footerMeta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.footerMeta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.phone {
+    margin-left: auto;
+}
+
+.footerActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.viewDetailsBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.viewDetailsBtn:hover {
+    background-color: #006666;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.totalAmount {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+}
+
+.totalLabel {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+
+.totalValue {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+}
+
+/* No Orders State */
+.noOrdersContainer {
+    text-align: center;
+    padding: 4rem 0;
+}
+
+.noOrdersIcon {
+    color: var(--text-color-light);
+    opacity: 0.5;
+    margin-bottom: 1.5rem;
+}
+.noOrdersTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.noOrdersText {
+    color: var(--text-color-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cardHeader, .cardFooter, .footerMeta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .totalAmount {
+        text-align: left;
+        margin-top: 1rem;
+    }
+} 

@@ -1,0 +1,124 @@
+/* Auth.module.css */
+.authPage {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+    background-color: var(--white-color);
+}
+
+.authContainer {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.authForm {
+    width: 100%;
+}
+
+.formHeader {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.formTitle {
+    font-size: 2.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.formSubtitle {
+    color: var(--text-color-light);
+    margin-top: 0.5rem;
+}
+
+.formGroup {
+    margin-bottom: 1.5rem;
+}
+
+.formLabel {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.inputWrapper {
+    position: relative;
+}
+
+.inputIcon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color-light);
+    pointer-events: none;
+}
+
+.formInput {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 3rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--background-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.formInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(43, 43, 43, 0.1);
+}
+
+.formInput.error {
+    border-color: var(--danger-color);
+}
+
+.passwordToggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color-light);
+}
+
+.errorMessage {
+    color: var(--danger-color);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.submitButton {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.9rem;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.75rem;
+}
+
+.redirectLink {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--text-color-light);
+}
+
+.redirectLink a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: underline;
+}
+.redirectLink a:hover {
+    color: var(--accent-color);
+} 

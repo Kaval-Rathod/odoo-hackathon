@@ -1,0 +1,216 @@
+/* CheckoutPage.module.css */
+.checkoutPage {
+    background-color: #f9fafb;
+    padding: 2rem 0 4rem;
+}
+
+.backButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--white-color);
+    border: 1px solid var(--border-color);
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    margin-bottom: 2rem;
+    transition: all 0.2s;
+}
+
+.backButton:hover {
+    background-color: #f8f8f8;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.checkoutLayout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.checkoutCard {
+    background-color: var(--white-color);
+    border-radius: var(--card-border-radius);
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.cardTitle {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.formGroupFull {
+    grid-column: 1 / -1;
+}
+
+.formLabel {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.formInput {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.formInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.formInput:disabled {
+    background-color: #f8f8f8;
+    cursor: not-allowed;
+}
+
+/* Summary Section */
+.summarySection {
+    position: sticky;
+    top: calc(var(--navbar-height) + 2rem);
+}
+
+.summaryDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.summaryItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.itemName {
+    color: var(--text-color-light);
+}
+.itemPrice {
+    font-weight: 500;
+}
+
+.summaryLine {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.summaryTotal {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.placeOrderBtn {
+    width: 100%;
+    padding: 0.875rem;
+    margin-top: 1.5rem;
+    border: none;
+    border-radius: 0.375rem;
+    background-color: #111827;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.placeOrderBtn:hover {
+    background-color: #374151;
+}
+
+.placeOrderBtn:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Payment Section */
+.paymentSection {
+    margin-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+}
+
+.paymentOptions {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.paymentOption {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--white-color);
+    transition: all 0.2s ease;
+}
+
+.paymentOption:hover {
+    border-color: var(--primary-color);
+}
+
+.paymentRadio {
+    accent-color: var(--primary-color);
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.paymentLabel {
+    flex: 1;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .checkoutLayout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+} 

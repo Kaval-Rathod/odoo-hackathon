@@ -1,0 +1,26 @@
+/* App.css (global layout) */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex: 1;
+  padding-top: var(--navbar-height);
+}
+
+/* Styles for auth pages */
+.app-wrapper.auth-page {
+  min-height: 100vh;
+}
