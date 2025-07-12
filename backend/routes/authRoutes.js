@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { register, login, getAllUsers } = require('../controllers/authController');
+const { register, login, getAllUsers, getMe } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
 
 router.post('/register', register);
@@ -13,5 +13,8 @@ router.get('/', protect, (req, res, next) => {
   }
   next();
 }, getAllUsers);
+
+// Get current user info
+router.get('/me', protect, getMe);
 
 module.exports = router;

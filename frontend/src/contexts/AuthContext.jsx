@@ -57,13 +57,26 @@ export const AuthProvider = ({ children }) => {
     toast.success('Logged out successfully');
   };
 
+  // Add a method to refresh user info from backend
+  const refreshUser = async () => {
+    try {
+      const data = await authAPI.fetchCurrentUser();
+      setUser(data);
+      localStorage.setItem('user', JSON.stringify(data));
+    } catch (error) {
+      // If error, maybe token expired, log out
+      logout();
+    }
+  };
+
   const value = {
     user,
     loading,
     login,
     register,
     logout,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+    refreshUser // <-- add this
   };
 
   return (

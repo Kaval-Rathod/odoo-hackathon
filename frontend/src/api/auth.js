@@ -35,5 +35,11 @@ export const authAPI = {
   getAll: async () => {
     const response = await api.get('/auth');
     return response.data;
+  },
+
+  // Fetch current user info from backend
+  fetchCurrentUser: async () => {
+    const response = await api.get('/auth/me');
+    return response.data;
   }
 };

@@ -2,6 +2,7 @@ const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
+const User = require('../models/User');
 
 // Configure these constants for easy reference
 const RAZORPAY_KEY_ID = 'rzp_test_igMFcMtYLETsxs';
@@ -182,9 +183,25 @@ exports.placeOrder = async (req, res) => {
       totalAmount,
       razorpayPaymentId,
       razorpayOrderId,
-      isPaid: paymentMethod === 'razorpay' && razorpayPaymentId ? true : false,
-      paidAt: paymentMethod === 'razorpay' && razorpayPaymentId ? Date.now() : null
+      isPaid: paymentMethod === 'razorpay' && razorpayPaymentId ? true : paymentMethod === 'points' ? true : false,
+      paidAt: paymentMethod === 'razorpay' && razorpayPaymentId ? Date.now() : paymentMethod === 'points' ? Date.now() : null
     });
+
+    if (paymentMethod === 'points') {
+      // User wants to pay with points
+      const user = await User.findById(req.user._id);
+      const pointsNeeded = Math.floor(Number(totalAmount));
+      if (user.points < pointsNeeded) {
+        return res.status(400).json({ message: 'Not enough points to complete this purchase.' });
+      }
+      user.points -= pointsNeeded;
+      await user.save();
+      // Do NOT award points for purchases made with points
+    } else {
+      // Award points: 1 point per ₹ spent, plus 7 bonus points
+      const pointsToAdd = Math.floor(Number(totalAmount)) + 7;
+      await User.findByIdAndUpdate(req.user._id, { $inc: { points: pointsToAdd } });
+    }
 
     // Clear cart if it exists
     await Cart.deleteOne({ user: req.user._id });

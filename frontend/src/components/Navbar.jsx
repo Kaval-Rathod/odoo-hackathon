@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingCart, User, Search, Heart } from 'lucide-react';
+import { Coins } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -51,7 +52,7 @@ const SearchModal = ({ isOpen, onClose }) => {
 };
 
 const Navbar = () => {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, refreshUser } = useAuth();
   const { getCartCount } = useCart();
   const { getWishlistCount } = useWishlist();
   const navigate = useNavigate();
@@ -86,6 +87,13 @@ const Navbar = () => {
     setIsDropdownOpen(false);
   }, [location.pathname]);
 
+  // Refresh user points on mount
+  useEffect(() => {
+    if (isAuthenticated) {
+      refreshUser();
+    }
+  }, [isAuthenticated]);
+
   return (
     <>
       <header className={styles.header}>
@@ -117,6 +125,12 @@ const Navbar = () => {
                 <span className={styles.cartBadge}>{getCartCount()}</span>
               )}
             </Link>
+            {isAuthenticated && user && (
+              <div className={styles.pointsDisplay} title="Your Points">
+                <Coins size={18} style={{ marginRight: 4, color: '#fbbf24', verticalAlign: 'middle' }} />
+                <span style={{ fontWeight: 600 }}>{user.points ?? 0} pts</span>
+              </div>
+            )}
             <div className={styles.separator}></div>
 
             {isAuthenticated ? (

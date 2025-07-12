@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const User = require('../models/User');
 
 // Create product (User or Admin)
 exports.createProduct = async (req, res) => {
@@ -9,6 +10,8 @@ exports.createProduct = async (req, res) => {
       status: 'pending',
     };
     const product = await Product.create(productData);
+    // Award 5 points to the user for adding a product
+    await User.findByIdAndUpdate(req.user._id, { $inc: { points: 5 } });
     const populatedProduct = await Product.findById(product._id)
       .populate('category', 'name')
       .populate('uploader', 'name email');
