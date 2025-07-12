@@ -2,6 +2,8 @@
 
 .productDetailContainer {
   padding: 0 0 5rem 0;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 .errorContainer {
@@ -38,15 +40,15 @@
 
 .productGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 4.5rem;
   align-items: flex-start;
 }
 
 @media (max-width: 992px) {
   .productGrid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 }
 
@@ -74,6 +76,12 @@
 .infoColumn {
   display: flex;
   flex-direction: column;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  padding: 2.5rem 2rem 2rem 2rem;
+  min-width: 320px;
+  max-width: 95vw;
 }
 
 .productCategory {
@@ -259,7 +267,7 @@
 .statusUploaderRow {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.2rem;
   margin-bottom: 1.2rem;
 }
 .statusBadge {
@@ -331,12 +339,55 @@
   gap: 0.7rem;
 }
 
+.swapConfirmOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.18);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.swapConfirmModal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+  padding: 2.5rem 2rem 2rem 2rem;
+  min-width: 320px;
+  max-width: 95vw;
+  text-align: left;
+}
+.swapConfirmModal h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.swapConfirmModal p {
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+.spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 600px) {
   .mainImageWrapper { min-height: 180px; }
   .mainImage { max-width: 98vw; }
   .galleryWrapper { gap: 0.5rem; }
   .thumbnailRow { gap: 0.3rem; }
   .thumb, .activeThumb { width: 38px; height: 38px; }
+  .infoColumn {
+    padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+    min-width: 0;
+  }
+  .productDetailContainer {
+    padding: 0 0 2.5rem 0;
+  }
   .statusUploaderRow { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
   .uploaderCard { padding: 0.4rem 0.7rem; font-size: 0.95rem; }
   .metaRow { gap: 0.3rem; }

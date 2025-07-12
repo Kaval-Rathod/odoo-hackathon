@@ -186,7 +186,6 @@ const ProductList = () => {
                                         title={!isAuthenticated ? 'Login to add to cart' : 'Add to cart'}
                                     >
                                         <ShoppingCart size={18} />
-                                        <span className={styles.cartText}>Add to cart</span>
                                     </button>
                                 </div>
                             </div>

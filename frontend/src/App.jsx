@@ -27,6 +27,7 @@ import CategoriesPage from './pages/CategoriesPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import UserDashboard from './pages/UserDashboard';
+import SwapPage from './pages/SwapPage';
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
                   <Route path="/order-success" element={<OrderSuccessPage />} />
                   <Route path="/myorders" element={<OrderHistoryPage />} />
                   <Route path="/orders/:orderId" element={<OrderDetail />} />
+                  <Route path="/swap" element={<SwapPage />} />
                   
                   {/* Admin Routes */}
                   <Route path="/admin" element={<AdminLayout />}>

@@ -193,9 +193,10 @@
 }
 
 .productCardFooter {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .productPrice {
@@ -205,55 +206,50 @@
 }
 
 .addToCartBtn {
-  background-color: var(--secondary-color);
-  color: var(--text-color-dark);
+  background-color: var(--primary-color);
+  color: #fff;
   font-weight: 600;
   border: none;
   border-radius: var(--border-radius);
-  padding: 0.6rem 1rem;
+  padding: 0.65rem 1.25rem;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
   white-space: nowrap;
-  
-  /* Initially hide text */
-  font-size: 0;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px #0001;
+  width: auto;
+  min-width: 0;
+  margin-left: 0;
 }
-
-.productCard:hover .addToCartBtn {
-  background-color: var(--primary-color);
+.addToCartBtn:hover {
+  background-color: #006666;
   color: #fff;
+  box-shadow: 0 4px 16px #0002;
 }
-
+.addToCartBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--border-color);
+  color: var(--text-color-light);
+}
 .addToCartBtn .cartText {
   display: inline-block;
-  max-width: 0;
+  margin-left: 0.5rem;
+  font-size: 1rem;
+  max-width: 100px;
   overflow: hidden;
-  transition: max-width 0.4s ease-in-out;
   vertical-align: middle;
 }
-
-.productCard:hover .addToCartBtn .cartText {
-    max-width: 100px; /* Adjust as needed */
-    margin-left: 0.25rem;
-}
-
 .addToCartBtn svg {
   width: 18px;
   height: 18px;
   transition: transform 0.3s ease;
 }
-
-.productCard:hover .addToCartBtn svg {
+.addToCartBtn:hover svg {
   transform: scale(1.1);
-}
-
-.addToCartBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background-color: var(--border-color);
 }
 
 @media (max-width: 768px) {
@@ -267,37 +263,35 @@
 }
 
 .wishlistBtn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(2px);
-    border: 1px solid var(--border-color);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--text-color);
-    transition: all 0.2s;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: #fff;
+  border: 1.5px solid var(--border-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--primary-color);
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px #0001;
 }
-
 .wishlistBtn:hover {
-    background-color: var(--white-color);
-    color: var(--danger-color);
-    transform: scale(1.1);
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+  transform: scale(1.1);
 }
-
 .wishlistBtn.inWishlist {
-    background-color: var(--danger-color);
-    color: var(--white-color);
-    border-color: var(--danger-color);
+  background-color: var(--danger-color);
+  color: var(--white-color);
+  border-color: var(--danger-color);
 }
-
 .wishlistBtn.inWishlist svg {
-    fill: var(--white-color);
+  fill: var(--white-color);
 }
 
 .productImage {

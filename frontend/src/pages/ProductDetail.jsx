@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ShoppingCart, Star, Plus, Minus, ChevronLeft } from 'lucide-react';
+import { ShoppingCart, Star, Plus, Minus, ChevronLeft, Loader2, Repeat } from 'lucide-react';
 import { productsAPI } from '../api/products';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -52,6 +52,8 @@ const ProductDetail = () => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [swapStatus, setSwapStatus] = useState(null);
   const [swapLoading, setSwapLoading] = useState(false);
+  const [showSwapConfirm, setShowSwapConfirm] = useState(false);
+  const [swapTypeToRequest, setSwapTypeToRequest] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -140,11 +142,29 @@ const ProductDetail = () => {
       await swapAPI.create({ itemId: product._id, type });
       toast.success(type === 'swap' ? 'Swap request sent!' : 'Redemption request sent!');
       setSwapStatus({ status: 'pending', type });
+      setShowSwapConfirm(false);
+      setSwapTypeToRequest(null);
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Request failed');
     } finally {
       setSwapLoading(false);
     }
+  };
+
+  const handleSwapClick = (type) => {
+    setSwapTypeToRequest(type);
+    setShowSwapConfirm(true);
+  };
+
+  const handleConfirmSwap = () => {
+    if (swapTypeToRequest) {
+      handleSwapRequest(swapTypeToRequest);
+    }
+  };
+
+  const handleCancelSwap = () => {
+    setShowSwapConfirm(false);
+    setSwapTypeToRequest(null);
   };
 
   if (loading) {
@@ -288,13 +308,46 @@ const ProductDetail = () => {
             {/* Swap/Redemption Actions */}
             {user && !user.isAdmin && product.uploader?._id !== user.id && product.status === 'approved' && !swapStatus && (
               <div className={styles.swapRedeemRow}>
-                <button className="btn btn-primary" onClick={() => handleSwapRequest('swap')} disabled={swapLoading} title="Request a direct swap for this item">Request Swap</button>
-                <button className="btn btn-secondary" onClick={() => handleSwapRequest('points')} disabled={swapLoading} title="Redeem this item using your points" style={{ marginLeft: 12 }}>Redeem via Points</button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleSwapClick('swap')}
+                  disabled={swapLoading}
+                  title="Request a direct swap for this item"
+                >
+                  {swapLoading && swapTypeToRequest === 'swap' ? <Loader2 size={18} className="spin" style={{marginRight: 6}} /> : <Repeat size={18} style={{marginRight: 6}} />}
+                  {swapLoading && swapTypeToRequest === 'swap' ? 'Requesting...' : 'Request Swap'}
+                </button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => handleSwapClick('points')}
+                  disabled={swapLoading}
+                  title="Redeem this item using your points"
+                  style={{ marginLeft: 12 }}
+                >
+                  {swapLoading && swapTypeToRequest === 'points' ? <Loader2 size={18} className="spin" style={{marginRight: 6}} /> : <ShoppingCart size={18} style={{marginRight: 6}} />}
+                  {swapLoading && swapTypeToRequest === 'points' ? 'Requesting...' : 'Redeem via Points'}
+                </button>
               </div>
             )}
             {swapStatus && (
               <div className={styles.swapStatusRow}>
                 <strong>Request Status:</strong> <span className={styles.statusBadge}>{swapStatus.status} ({swapStatus.type})</span>
+              </div>
+            )}
+            {/* Swap Confirmation Modal */}
+            {showSwapConfirm && (
+              <div className={styles.swapConfirmOverlay}>
+                <div className={styles.swapConfirmModal}>
+                  <h3>Confirm {swapTypeToRequest === 'swap' ? 'Swap' : 'Redemption'} Request</h3>
+                  <p>Are you sure you want to {swapTypeToRequest === 'swap' ? 'request a swap' : 'redeem this item using your points'}?</p>
+                  <div style={{ display: 'flex', gap: 16, marginTop: 24, justifyContent: 'flex-end' }}>
+                    <button className="btn btn-secondary" onClick={handleCancelSwap} disabled={swapLoading}>Cancel</button>
+                    <button className="btn btn-primary" onClick={handleConfirmSwap} disabled={swapLoading}>
+                      {swapLoading ? <Loader2 size={16} className="spin" style={{marginRight: 6}} /> : null}
+                      Confirm
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>

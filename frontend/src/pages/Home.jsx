@@ -15,12 +15,12 @@ const DEFAULT_PRODUCT_IMAGE = 'https://via.placeholder.com/400x300?text=Product'
 const RewearHero = () => (
   <section className={styles.heroBanner}>
     <div className={styles.heroContent}>
-      <h1 className={styles.heroTitle}>ReWear – Community Clothing Exchange</h1>
+      <h1 className={styles.heroTitle}>ReWear Community Clothing Exchange</h1>
       <p className={styles.heroDescription}>
         Give your unused clothes a second life! ReWear lets you swap or redeem clothing for points, promoting sustainable fashion and reducing textile waste. Join our community and make a positive impact—one swap at a time.
       </p>
       <div className={styles.ctaRow}>
-        <Link to="/register" className={`${styles.btn} ${styles.btnPrimary}`}>Start Swapping</Link>
+        <Link to="/swap" className={`${styles.btn} ${styles.btnPrimary}`}>Start Swapping</Link>
         <Link to="/products" className={`${styles.btn} ${styles.btnSecondary}`}>Browse Items</Link>
         <Link to="/add-product" className={`${styles.btn} ${styles.btnTertiary}`}>List an Item</Link>
       </div>
