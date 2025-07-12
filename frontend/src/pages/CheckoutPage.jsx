@@ -386,7 +386,7 @@ const CheckoutPage = () => {
                         <div className={styles.checkoutCard}>
                             <h3 className={styles.cardTitle}>Order Summary</h3>
                             <div className={styles.summaryDetails}>
-                                {cart.map(item => (
+                                {cart.filter(item => item.product).map(item => (
                                     <div key={item._id} className={styles.summaryItem}>
                                         <span className={styles.itemName}>{item.product.name} x {item.quantity}</span>
                                         <span className={styles.itemPrice}>₹{(item.product.price * item.quantity).toLocaleString()}</span>
