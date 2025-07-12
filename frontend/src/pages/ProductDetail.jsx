@@ -10,6 +10,34 @@ import styles from '../styles/ProductDetail.module.css';
 import React from 'react';
 import { swapAPI } from '../api/index';
 
+// --- IMAGE GALLERY ---
+const ImageGallery = ({ images = [], name }) => {
+  const [main, setMain] = useState(images[0] || DEFAULT_PRODUCT_IMAGE);
+  return (
+    <div className={styles.galleryWrapper}>
+      <div className={styles.mainImageWrapper}>
+        <img src={main} alt={name} className={styles.mainImage} onError={e => { e.target.src = DEFAULT_PRODUCT_IMAGE; }} />
+      </div>
+      {images.length > 1 && (
+        <div className={styles.thumbnailRow}>
+          {images.map((img, idx) => (
+            <img
+              key={idx}
+              src={img}
+              alt={name + ' thumbnail'}
+              className={main === img ? styles.activeThumb : styles.thumb}
+              onClick={() => setMain(img)}
+              onError={e => { e.target.src = DEFAULT_PRODUCT_IMAGE; }}
+              tabIndex={0}
+              aria-label={`View image ${idx + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -138,32 +166,35 @@ const ProductDetail = () => {
     );
   }
 
+  // Use product.images (array) if available, else fallback to product.image
+  const images = product?.images && product.images.length > 0 ? product.images : [product?.image || DEFAULT_PRODUCT_IMAGE];
+
   return (
     <div className={styles.productDetailContainer}>
       <div className="container">
         <div className={styles.backLinkWrapper}>
-            <Link to="/products" className={styles.backLink}>
-                <ChevronLeft size={18} />
-                Back to products
-            </Link>
+          <Link to="/products" className={styles.backLink}>
+            <ChevronLeft size={18} />
+            Back to products
+          </Link>
         </div>
         <div className={styles.productGrid}>
           <div className={styles.imageColumn}>
-            <div className={styles.productImageWrapper}>
-              <img
-                src={product.image || DEFAULT_PRODUCT_IMAGE}
-                alt={product.name}
-                className={styles.productImage}
-                onError={(e) => { e.target.src = DEFAULT_PRODUCT_IMAGE; }}
-              />
-            </div>
+            <ImageGallery images={images} name={product.name} />
           </div>
           <div className={styles.infoColumn}>
+            <div className={styles.statusUploaderRow}>
+              <span className={`${styles.statusBadge} ${styles[product.status]}`}>{product.status}</span>
+              <div className={styles.uploaderCard}>
+                <span className={styles.uploaderLabel}>Uploader:</span>
+                <span className={styles.uploaderName}>{product.uploader?.name || 'N/A'}</span>
+                <span className={styles.uploaderEmail}>{product.uploader?.email || ''}</span>
+              </div>
+            </div>
             <Link to={`/products?category=${product.category?._id}`} className={styles.productCategory}>
               {product.category?.name || 'Uncategorized'}
             </Link>
             <h1 className={styles.productTitle}>{product.name}</h1>
-            
             <div className={styles.productRatingWrapper}>
               <div className={styles.productRatingStars}>
                 {[...Array(5)].map((_, i) => (
@@ -172,9 +203,7 @@ const ProductDetail = () => {
               </div>
               <span className={styles.productRatingText}>(5.0)</span>
             </div>
-
             <p className={styles.productPrice}>₹{product.price?.toLocaleString()}</p>
-
             <p className={styles.productDescription}>
               {product.description
                 ? product.description.split('\n').map((line, idx) => (
@@ -185,8 +214,14 @@ const ProductDetail = () => {
                   ))
                 : 'A timeless piece, crafted with precision and care, perfect for any occasion.'}
             </p>
-
-            {/* Size/Model selection */}
+            {/* Tags, type, size, condition, etc. */}
+            <div className={styles.metaRow}>
+              {product.type && <span className={styles.metaTag}>Type: {product.type}</span>}
+              {product.size && <span className={styles.metaTag}>Size: {product.size}</span>}
+              {product.condition && <span className={styles.metaTag}>Condition: {product.condition}</span>}
+              {product.tags && product.tags.length > 0 && product.tags.map((tag, i) => <span key={i} className={styles.metaTag}>#{tag}</span>)}
+            </div>
+            {/* Size/Model/Options selectors (unchanged) */}
             {isFashion && product.sizes?.length > 0 && (
               <div className={styles.optionSelector}>
                 <label htmlFor="size-select">Select Size:</label>
@@ -237,6 +272,7 @@ const ProductDetail = () => {
                     className={`${styles.addToCartBtn} btn btn-primary`}
                     onClick={handleAddToCart}
                     disabled={!product.countInStock || product.countInStock <= 0 || (user && user.isAdmin)}
+                    aria-disabled={!product.countInStock || product.countInStock <= 0 || (user && user.isAdmin)}
                 >
                     <ShoppingCart size={18} />
                     {user?.isAdmin
@@ -249,26 +285,16 @@ const ProductDetail = () => {
             <div className={styles.stockInfo}>
                 {product.countInStock > 0 ? `${product.countInStock} items in stock` : 'Currently out of stock'}
             </div>
-            <div style={{ marginBottom: 8 }}>
-              <strong>Uploader:</strong> {product.uploader?.name || 'N/A'} ({product.uploader?.email || ''})
-            </div>
-            <div style={{ marginBottom: 8 }}>
-              <strong>Status:</strong> {product.status}
-            </div>
             {/* Swap/Redemption Actions */}
             {user && !user.isAdmin && product.uploader?._id !== user.id && product.status === 'approved' && !swapStatus && (
-              <div style={{ margin: '16px 0' }}>
-                <button className="btn btn-primary" onClick={() => handleSwapRequest('swap')} disabled={swapLoading}>
-                  Request Swap
-                </button>
-                <button className="btn btn-secondary" onClick={() => handleSwapRequest('points')} disabled={swapLoading} style={{ marginLeft: 12 }}>
-                  Redeem via Points
-                </button>
+              <div className={styles.swapRedeemRow}>
+                <button className="btn btn-primary" onClick={() => handleSwapRequest('swap')} disabled={swapLoading} title="Request a direct swap for this item">Request Swap</button>
+                <button className="btn btn-secondary" onClick={() => handleSwapRequest('points')} disabled={swapLoading} title="Redeem this item using your points" style={{ marginLeft: 12 }}>Redeem via Points</button>
               </div>
             )}
             {swapStatus && (
-              <div style={{ margin: '16px 0' }}>
-                <strong>Request Status:</strong> {swapStatus.status} ({swapStatus.type})
+              <div className={styles.swapStatusRow}>
+                <strong>Request Status:</strong> <span className={styles.statusBadge}>{swapStatus.status} ({swapStatus.type})</span>
               </div>
             )}
           </div>
@@ -279,3 +305,5 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+
+// TODO: Update ProductDetail.module.css for new classes: galleryWrapper, mainImageWrapper, mainImage, thumbnailRow, thumb, activeThumb, statusBadge, statusUploaderRow, uploaderCard, uploaderLabel, uploaderName, uploaderEmail, metaRow, metaTag, swapRedeemRow, swapStatusRow.

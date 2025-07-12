@@ -8,9 +8,11 @@ const {
   deleteProduct,
 } = require('../controllers/productController');
 const { protect, isAdmin } = require('../middleware/authMiddleware');
+const optionalProtect = require('../middleware/authMiddleware').optionalProtect;
 
 // Public Routes
-router.get('/', getAllProducts);
+router.get('/', optionalProtect, getAllProducts);
+router.get('/pending', protect, isAdmin, require('../controllers/productController').getPendingProducts);
 router.get('/:id', getProductById);
 
 // Product creation: any authenticated user

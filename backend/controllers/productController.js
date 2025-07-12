@@ -138,3 +138,17 @@ exports.deleteProduct = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+// Get all pending products (Admin only)
+exports.getPendingProducts = async (req, res) => {
+  try {
+    if (!req.user?.isAdmin) return res.status(403).json({ message: 'Admin access denied' });
+    const products = await Product.find({ status: 'pending', isActive: true })
+      .populate('category', 'name')
+      .populate('uploader', 'name email')
+      .sort({ createdAt: -1 });
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

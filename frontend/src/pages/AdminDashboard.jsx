@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import { DEFAULT_PRODUCT_IMAGE } from '../utils/constants';
 import styles from '../styles/AdminDashboard.module.css';
 import AdminLayout from '../components/AdminLayout';
+import { useRef } from 'react';
 
 const StatCard = ({ icon, label, value, detail }) => (
     <div className={styles.statCard}>
@@ -164,7 +165,8 @@ const DashboardContent = ({ stats, products, orders, handleDeleteProduct }) => (
     </main>
 );
 
-const ProductsContent = ({ products, handleDeleteProduct }) => (
+// Update ProductsContent to accept new props
+const ProductsContent = ({ products, handleDeleteProduct, pendingProducts, handleApprove, handleReject, user, swapRequests, handleAcceptSwap, handleRejectSwap }) => (
     <main className={styles.mainContent}>
         <header className={styles.mainHeader}>
             <h1 className={styles.mainTitle}>Products</h1>
@@ -173,39 +175,110 @@ const ProductsContent = ({ products, handleDeleteProduct }) => (
                 <span>Add Product</span>
             </Link>
         </header>
-
-        <div className={styles.productList}>
-            {products.map((product) => (
-                <div key={product._id} className={styles.productRow}>
-                    <img
-                        src={product.image || DEFAULT_PRODUCT_IMAGE}
-                        alt={product.name}
-                        className={styles.productRowImage}
-                        onError={(e) => { e.target.src = DEFAULT_PRODUCT_IMAGE; }}
-                    />
-                    <div className={styles.productRowInfo}>
-                        <Link to={`/products/${product._id}`} className={styles.productRowName}>{product.name}</Link>
-                        <span className={styles.productRowCategory}>{product.category?.name || 'Uncategorized'}</span>
+        <div className={styles.productsAndApprovalsWrapper}>
+            <div className={styles.productList}>
+                {products.map((product) => (
+                    <div key={product._id} className={styles.productRow}>
+                        <img
+                            src={product.image || DEFAULT_PRODUCT_IMAGE}
+                            alt={product.name}
+                            className={styles.productRowImage}
+                            onError={(e) => { e.target.src = DEFAULT_PRODUCT_IMAGE; }}
+                        />
+                        <div className={styles.productRowInfo}>
+                            <Link to={`/products/${product._id}`} className={styles.productRowName}>{product.name}</Link>
+                            <span className={styles.productRowCategory}>{product.category?.name || 'Uncategorized'}</span>
+                        </div>
+                        <div className={styles.productRowPrice}>₹{product.price.toLocaleString()}</div>
+                        <div className={styles.productRowStock}>
+                            {product.countInStock > 0 
+                                ? <span className={styles.inStock}>{product.countInStock} in stock</span>
+                                : <span className={styles.outOfStock}>Out of stock</span>
+                            }
+                        </div>
+                        <div className={styles.productRowActions}>
+                            <Link to={`/admin/products/edit/${product._id}`} className={styles.actionBtn} title="Edit">
+                                <Edit size={16} />
+                            </Link>
+                            <button onClick={() => handleDeleteProduct(product._id)} className={styles.actionBtn} title="Delete">
+                                <Trash2 size={16} />
+                            </button>
+                        </div>
                     </div>
-                    <div className={styles.productRowPrice}>₹{product.price.toLocaleString()}</div>
-                    <div className={styles.productRowStock}>
-                        {product.countInStock > 0 
-                            ? <span className={styles.inStock}>{product.countInStock} in stock</span>
-                            : <span className={styles.outOfStock}>Out of stock</span>
-                        }
-                    </div>
-                    <div className={styles.productRowActions}>
-                        <Link to={`/admin/products/edit/${product._id}`} className={styles.actionBtn} title="Edit">
-                            <Edit size={16} />
-                        </Link>
-                        <button onClick={() => handleDeleteProduct(product._id)} className={styles.actionBtn} title="Delete">
-                            <Trash2 size={16} />
-                        </button>
-                    </div>
-                </div>
-            ))}
+                ))}
+                {products.length === 0 && <p>No products found.</p>}
+            </div>
+            <div style={{display: 'flex', flexDirection: 'column', gap: '2rem', minWidth: 340, maxWidth: 420, flex: '1 1 340px'}}>
+                {/* Pending Product Approvals Section */}
+                {user?.isAdmin && (
+                    <section className={styles.pendingSection}>
+                        <h2 className={styles.pendingTitle}>Pending Product Approvals</h2>
+                        <div className={styles.pendingCard}>
+                            {pendingProducts.length === 0 ? <p className={styles.pendingEmpty}>No pending products.</p> : (
+                                <table className={styles.productTable}>
+                                    <thead>
+                                        <tr>
+                                            <th>Preview</th>
+                                            <th>Name</th>
+                                            <th>Uploader</th>
+                                            <th>Category</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {pendingProducts.map(p => (
+                                            <tr key={p._id}>
+                                                <td><img src={p.images?.[0] || p.image || DEFAULT_PRODUCT_IMAGE} alt={p.name} className={styles.pendingThumb} /></td>
+                                                <td>{p.name}</td>
+                                                <td>{p.uploader?.name || 'N/A'}</td>
+                                                <td>{p.category?.name || 'N/A'}</td>
+                                                <td>
+                                                    <button onClick={() => handleApprove(p._id)} className={`btn btn-primary ${styles.actionBtn}`} title="Approve">Approve</button>
+                                                    <button onClick={() => handleReject(p._id)} className={`btn btn-danger ${styles.actionBtn}`} title="Reject">Reject</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                    </section>
+                )}
+                {/* Pending Swap/Redemption Moderation Section */}
+                {user?.isAdmin && (
+                    <section className={styles.pendingSection}>
+                        <h2 className={styles.pendingTitle}>Pending Swap/Redemption Requests</h2>
+                        <div className={styles.pendingCard}>
+                            {swapRequests.length === 0 ? <p className={styles.pendingEmpty}>No pending requests.</p> : (
+                                <table className={styles.orderTable}>
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Requester</th>
+                                            <th>Type</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {swapRequests.map(r => (
+                                            <tr key={r._id}>
+                                                <td>{r.item?.name || 'Item'}</td>
+                                                <td>{r.requester?.name || 'User'}</td>
+                                                <td><span className={`${styles.statusBadge} ${styles[r.type]}`}>{r.type}</span></td>
+                                                <td>
+                                                    <button onClick={() => handleAcceptSwap(r._id)} className={`btn btn-primary ${styles.actionBtn}`} title="Accept">Accept</button>
+                                                    <button onClick={() => handleRejectSwap(r._id)} className={`btn btn-danger ${styles.actionBtn}`} title="Reject">Reject</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                    </section>
+                )}
+            </div>
         </div>
-        {products.length === 0 && <p>No products found.</p>}
     </main>
 );
 
@@ -554,6 +627,13 @@ const ContactMessagesContent = ({ contacts }) => {
     );
 };
 
+// --- Confirm Dialog ---
+const useConfirm = (message) => {
+  const confirmRef = useRef();
+  const ask = () => window.confirm(message);
+  return ask;
+};
+
 const AdminDashboard = () => {
     const [stats, setStats] = useState({ products: [], orders: [], users: [], totalRevenue: 0 });
     const [products, setProducts] = useState([]);
@@ -565,6 +645,9 @@ const AdminDashboard = () => {
     const location = useLocation();
     const [pendingProducts, setPendingProducts] = useState([]);
     const [swapRequests, setSwapRequests] = useState([]);
+    const confirmApprove = useConfirm('Are you sure you want to approve this product?');
+    const confirmReject = useConfirm('Are you sure you want to reject this product?');
+    const confirmDelete = useConfirm('Are you sure you want to delete this product?');
 
     useEffect(() => {
         if (!user?.isAdmin) {
@@ -615,10 +698,11 @@ const AdminDashboard = () => {
         }
     };
 
+    // Fetch all pending products for admin
     const fetchPendingProducts = async () => {
         try {
-            const all = await productsAPI.getAll();
-            setPendingProducts(all.filter(p => p.status === 'pending'));
+            const pending = await productsAPI.getPending();
+            setPendingProducts(pending);
         } catch {
             setPendingProducts([]);
         }
@@ -632,12 +716,26 @@ const AdminDashboard = () => {
         }
     };
     const handleApprove = async (id) => {
-        await productsAPI.approve(id);
-        fetchPendingProducts();
+        if (!confirmApprove()) return;
+        try {
+            await productsAPI.approve(id);
+            toast.success('Product approved!');
+            fetchPendingProducts();
+            fetchData(); // Refresh all product lists
+        } catch (error) {
+            toast.error('Failed to approve product.');
+        }
     };
     const handleReject = async (id) => {
-        await productsAPI.reject(id);
-        fetchPendingProducts();
+        if (!confirmReject()) return;
+        try {
+            await productsAPI.reject(id);
+            toast.success('Product rejected!');
+            fetchPendingProducts();
+            fetchData(); // Refresh all product lists
+        } catch (error) {
+            toast.error('Failed to reject product.');
+        }
     };
     const handleAcceptSwap = async (id) => {
         await swapAPI.accept(id);
@@ -649,15 +747,14 @@ const AdminDashboard = () => {
     };
 
     const handleDeleteProduct = async (productId) => {
-        if (window.confirm('Are you sure you want to delete this product?')) {
-            try {
-                await productsAPI.delete(productId);
-                toast.success('Product deleted successfully');
-                fetchData(); // Refetch all data
-            } catch (error) {
-                console.error('Failed to delete product:', error);
-                toast.error('Failed to delete product.');
-            }
+        if (!confirmDelete()) return;
+        try {
+            await productsAPI.delete(productId);
+            toast.success('Product deleted successfully');
+            fetchData(); // Refetch all data
+        } catch (error) {
+            console.error('Failed to delete product:', error);
+            toast.error('Failed to delete product.');
         }
     };
 
@@ -677,7 +774,17 @@ const AdminDashboard = () => {
     return (
         <>
             {isProductsPage ? (
-                <ProductsContent products={products} handleDeleteProduct={handleDeleteProduct} />
+                <ProductsContent 
+                    products={products} 
+                    handleDeleteProduct={handleDeleteProduct} 
+                    pendingProducts={pendingProducts}
+                    handleApprove={handleApprove}
+                    handleReject={handleReject}
+                    user={user}
+                    swapRequests={swapRequests}
+                    handleAcceptSwap={handleAcceptSwap}
+                    handleRejectSwap={handleRejectSwap}
+                />
             ) : isOrdersPage ? (
                 <OrdersContent orders={orders} />
             ) : isCustomersPage ? (
@@ -686,68 +793,6 @@ const AdminDashboard = () => {
                 <ContactMessagesContent contacts={contacts} />
             ) : (
                 <DashboardContent stats={stats} products={products} orders={orders} handleDeleteProduct={handleDeleteProduct} />
-            )}
-            {/* Admin: Pending Product Approvals */}
-            {user?.isAdmin && (
-                <section style={{ margin: '32px 0' }}>
-                    <h2>Pending Product Approvals</h2>
-                    {pendingProducts.length === 0 ? <p>No pending products.</p> : (
-                        <table className={styles.productTable} style={{ marginTop: 12 }}>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Uploader</th>
-                                    <th>Category</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {pendingProducts.map(p => (
-                                    <tr key={p._id}>
-                                        <td>{p.name}</td>
-                                        <td>{p.uploader?.name || 'N/A'}</td>
-                                        <td>{p.category?.name || 'N/A'}</td>
-                                        <td>
-                                            <button onClick={() => handleApprove(p._id)} className="btn btn-primary">Approve</button>
-                                            <button onClick={() => handleReject(p._id)} className="btn btn-danger" style={{ marginLeft: 8 }}>Reject</button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </section>
-            )}
-            {/* Admin: Swap/Redemption Moderation */}
-            {user?.isAdmin && (
-                <section style={{ margin: '32px 0' }}>
-                    <h2>Pending Swap/Redemption Requests</h2>
-                    {swapRequests.length === 0 ? <p>No pending requests.</p> : (
-                        <table className={styles.orderTable} style={{ marginTop: 12 }}>
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Requester</th>
-                                    <th>Type</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {swapRequests.map(r => (
-                                    <tr key={r._id}>
-                                        <td>{r.item?.name || 'Item'}</td>
-                                        <td>{r.requester?.name || 'User'}</td>
-                                        <td>{r.type}</td>
-                                        <td>
-                                            <button onClick={() => handleAcceptSwap(r._id)} className="btn btn-primary">Accept</button>
-                                            <button onClick={() => handleRejectSwap(r._id)} className="btn btn-danger" style={{ marginLeft: 8 }}>Reject</button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </section>
             )}
         </>
     );

@@ -25,3 +25,19 @@ exports.isAdmin = (req, res, next) => {
   if (!req.user?.isAdmin) return res.status(403).json({ message: 'Admin access denied' });
   next();
 };
+
+// Optional authentication: if token present, set req.user, else continue
+exports.optionalProtect = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return next();
+  const token = authHeader.split(' ')[1];
+  if (!token) return next();
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select('-password');
+    if (user) req.user = user;
+  } catch (err) {
+    // Ignore token errors for optional auth
+  }
+  next();
+};

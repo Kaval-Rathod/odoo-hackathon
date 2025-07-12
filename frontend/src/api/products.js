@@ -47,5 +47,11 @@ export const productsAPI = {
   reject: async (id) => {
     const response = await api.put(`/products/${id}/reject`);
     return response.data;
+  },
+
+  // Get all pending products (admin only)
+  getPending: async () => {
+    const response = await api.get('/products/pending');
+    return response.data;
   }
 }; 

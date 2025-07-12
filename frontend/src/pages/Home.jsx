@@ -11,18 +11,25 @@ import Footer from '../components/Footer';
 const DEFAULT_CATEGORY_IMAGE = 'https://via.placeholder.com/120x120?text=Category';
 const DEFAULT_PRODUCT_IMAGE = 'https://via.placeholder.com/400x300?text=Product';
 
-const HeroBanner = () => (
+// --- REWEAR HERO SECTION ---
+const RewearHero = () => (
   <section className={styles.heroBanner}>
     <div className={styles.heroContent}>
-      <p className={styles.heroSubtitle}>Explore the new collection</p>
-      <h1 className={styles.heroTitle}>Discover Your Next Favorite Thing</h1>
-      <p className={styles.heroDescription}>Curated products for a modern lifestyle. High quality, timeless design.</p>
-      <Link to="/products" className={`${styles.btn} ${styles.btnPrimary}`}>Shop Now</Link>
+      <h1 className={styles.heroTitle}>ReWear – Community Clothing Exchange</h1>
+      <p className={styles.heroDescription}>
+        Give your unused clothes a second life! ReWear lets you swap or redeem clothing for points, promoting sustainable fashion and reducing textile waste. Join our community and make a positive impact—one swap at a time.
+      </p>
+      <div className={styles.ctaRow}>
+        <Link to="/register" className={`${styles.btn} ${styles.btnPrimary}`}>Start Swapping</Link>
+        <Link to="/products" className={`${styles.btn} ${styles.btnSecondary}`}>Browse Items</Link>
+        <Link to="/add-product" className={`${styles.btn} ${styles.btnTertiary}`}>List an Item</Link>
+      </div>
+      <p className={styles.heroNote}>* You must be logged in to list an item.</p>
     </div>
     <div className={styles.heroImageContainer}>
       <img 
-        src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=2574&auto=format&fit=crop" 
-        alt="Collection of products" 
+        src="/public/header.avif" 
+        alt="Clothing exchange" 
         className={styles.heroImage} 
       />
     </div>
@@ -161,6 +168,38 @@ const BenefitsBar = () => {
 );
 };
 
+// --- FEATURED ITEMS CAROUSEL ---
+const FeaturedItemsCarousel = ({ products }) => {
+  if (!products || products.length === 0) return null;
+  const featured = products.slice(0, 5);
+  return (
+    <section className={styles.section}>
+      <div className="container">
+        <h2 className={styles.sectionTitle}>Featured Items</h2>
+        <p className={styles.sectionSubtitle}>Recently added or highlighted by our community</p>
+        <div className={styles.featuredCarousel}>
+          {featured.map((product) => (
+            <div key={product._id} className={styles.featuredCard}>
+              <img
+                src={product.image || DEFAULT_PRODUCT_IMAGE}
+                alt={product.name}
+                className={styles.featuredImage}
+                onError={e => { e.target.src = DEFAULT_PRODUCT_IMAGE; }}
+              />
+              <div className={styles.featuredInfo}>
+                <h3 className={styles.featuredName}>{product.name}</h3>
+                <p className={styles.featuredUploader}>By: {product.uploader?.name || 'User'}</p>
+                <span className={styles.featuredStatus}>{product.status}</span>
+                <Link to={`/products/${product._id}`} className={styles.featuredLink}>View Item</Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -197,7 +236,8 @@ const Home = () => {
 
   return (
     <div className={styles.home}>
-      <HeroBanner />
+      <RewearHero />
+      <FeaturedItemsCarousel products={products} />
       <CategoryCarousel categories={categories} />
       <PopularProducts products={products} />
       <BenefitsBar />
